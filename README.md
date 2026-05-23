@@ -244,3 +244,43 @@ The platform exports rich, real-time telemetry pipelines to monitor concurrent a
 * **Liveness & Health Check**: Exposed at `http://localhost:8000/health` with automated status verification.
 * **Prometheus Metrics**: Exposed at `http://localhost:8000/metrics`. Standardized for Grafana scraping to log active socket counts, queue latency, and error trends.
 * **Distributed Tracing (Langfuse)**: If `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_SECRET_KEY` are provided in `.env`, the system automatically captures model tokens, per-step latency, and validation failures inside the LangGraph mesh.
+
+---
+
+## 📋 Development Tracking (TODO.md)
+
+Phase 1: Voice & Pipeline (Completed)
+
+[x] Pipecat WebSocket transport & STT foundation.
+
+[x] Voice Activity Detection (VAD) configuration.
+
+Phase 2: Orchestration (Completed)
+
+[x] LangGraph Supervisor node and state machine.
+
+[x] Checkpointer implementation for conversation persistence.
+
+Phase 3: Hybrid RAG Search (In Progress)
+
+[ ] Implement Sparse vector indexing (SPLADE) for enhanced keyword precision.
+
+[ ] Configure Qdrant collection for hybrid vector support.
+
+[ ] Fuse Dense/Sparse search results using Reciprocal Rank Fusion.
+
+[ ] Bind hybrid search as an autonomous @tool in the RAG node.
+
+Phase 4: Langfuse Observability (In Progress)
+
+[ ] Inject LangfuseCallbackHandler into graph configuration.
+
+[ ] Instrument WebSocket endpoints to capture end-to-end latency metrics.
+
+Phase 5: Production Hardening (Planned)
+
+[ ] Implement robust API Key authentication for WebSocket security.
+
+[ ] Migrate memory persistence to Redis/Postgres for multi-worker support.
+
+[ ] Finalize Text-to-Speech integration in the Pipecat pipeline.
