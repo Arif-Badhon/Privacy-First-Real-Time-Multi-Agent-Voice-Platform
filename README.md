@@ -35,43 +35,45 @@ This platform is engineered to address the toughest challenges in production Voi
 The flowchart below demonstrates the full-duplex data flow, showing how raw audio packets are ingested, parsed into semantic intent, run through an autonomous multi-agent state graph, and synthesized back to the user under a unified telemetry scope.
 
 ```mermaid
-flowchart TD
-    %% Dark Mode Optimized Styling
+graph TD
+    %% Define Styles
     classDef hardware fill:#1e1e1e,stroke:#64ffda,stroke-width:2px,color:#ffffff;
     classDef stream fill:#263238,stroke:#80deea,stroke-width:2px,color:#ffffff;
     classDef agentmesh fill:#2d1b4e,stroke:#ce93d8,stroke-width:2px,color:#ffffff;
     classDef storage fill:#3e2723,stroke:#ffab91,stroke-width:2px,color:#ffffff;
-    classDef cluster fill:#121212,stroke:#424242,stroke-width:1px,stroke-dasharray: 5 5,color:#b0bec5;
+    classDef clusterstyle fill:#121212,stroke:#424242,stroke-width:1px,stroke-dasharray: 5 5,color:#b0bec5;
 
     UserMic["🎙️ User / Microphone"]:::hardware
     
-    subgraph PipecatPipeline ["🔀 Pipecat Full-Duplex Pipeline"]:::cluster
+    subgraph PipecatPipeline ["🔀 Pipecat Full-Duplex Pipeline"]
+        direction TB
         Transport["Websocket Transport"]:::stream
         STT["Faster-Whisper STT"]:::stream
         TTS["TTS Engine"]:::stream
     end
 
-    subgraph LangGraphMesh ["🕸️ LangGraph Orchestration Mesh"]:::cluster
+    subgraph LangGraphMesh ["🕸️ LangGraph Orchestration Mesh"]
+        direction TB
         Supervisor["Supervisor Node"]:::agentmesh
         
-        subgraph SpecializedAgents ["🤖 Specialized Workers"]:::cluster
+        subgraph SpecializedAgents ["🤖 Specialized Workers"]
             RAG["RAG Researcher"]:::agentmesh
             Validator["JSON Validator"]:::agentmesh
         end
     end
 
-    subgraph LLMRunner ["🧠 Local Inference"]:::cluster
+    subgraph LLMRunner ["🧠 Local Inference"]
         Ollama["Ollama Runtime<br>(M-Series MPS)"]:::hardware
     end
     
-    subgraph KnowledgeDB ["💾 Data & Memory"]:::cluster
+    subgraph KnowledgeDB ["💾 Data & Memory"]
         Qdrant[("🔍 Qdrant Hybrid Vector DB")]:::storage
         Redis[("💾 Redis Memory State")]:::storage
     end
 
     TTSOutput["🔊 User Speaker"]:::hardware
 
-    %% Flows with light-colored lines for dark mode contrast
+    %% Flows
     UserMic ==>|PCM Audio| Transport
     Transport --> STT
     STT -->|Transcribed Text| Supervisor
@@ -87,8 +89,8 @@ flowchart TD
     TTS --> Transport
     Transport ==>|Audio Stream| TTSOutput
 
-    %% Adjust Link Colors
-    linkStyle default stroke:#b0bec5,stroke-width:2px;
+    %% Apply cluster styles
+    class PipecatPipeline,LangGraphMesh,SpecializedAgents,LLMRunner,KnowledgeDB clusterstyle
 ```
 
 ---
