@@ -12,8 +12,9 @@ A production-grade, state-of-the-art **100% offline-first**, multi-agent voice A
 [![Docker](https://img.shields.io/badge/Docker-Containerized-blue?logo=docker&logoColor=white)](https://www.docker.com/)
 
 ---
-![Project Status](https://img.shields.io/badge/status-80%25-green)
 
+![Project Status](https://img.shields.io/badge/Status-In%20Development-brightgreen?style=for-the-badge&logo=appveyor)
+![Completion](https://img.shields.io/badge/Completion-65%25-blue?style=for-the-badge)
 ---
 
 ## 🎯 Architectural Philosophy & Engineering Highlights
