@@ -12,15 +12,18 @@ A production-grade, state-of-the-art **100% offline-first**, multi-agent voice A
 [![Docker](https://img.shields.io/badge/Docker-Containerized-blue?logo=docker&logoColor=white)](https://www.docker.com/)
 
 ---
+![Project Status](https://img.shields.io/badge/status-80%25-green)
+
+---
 
 ## 🎯 Architectural Philosophy & Engineering Highlights
 
 This platform is engineered to address the toughest challenges in production Voice AI: **latency, state durability, privacy, and full-duplex session handling**.
 
-*   **Sub-100ms Pipeline Reactivity**: Powered by an event-driven **Pipecat** transport layer, bridging raw microphone streams through **Faster-Whisper STT** and structured **Cartesia TTS** with zero idle blocking.
-*   **Privacy-First Local Execution**: Orchestrated to leverage Apple Silicon's **MPS (Metal Performance Shaders)** and unified memory architecture, running large LLMs and local embedders completely offline at high token-per-second rates.
-*   **Resilient Socket Sessions**: Uses a thread-aware **Redis checkpointer** within LangGraph. If a WebSocket connection drops mid-speech, the session resumes seamlessly upon reconnection without losing agent memory state.
-*   **Enterprise-Grade Observability**: Integrates custom middleware that forces distributed trace propagation (`X-Trace-ID`) across asynchronous thread pools, with live **Prometheus instrumentation** (`/metrics`) and deep agent step-tracing via **Langfuse**.
+* **Sub-100ms Pipeline Reactivity**: Powered by an event-driven **Pipecat** transport layer, bridging raw microphone streams through **Faster-Whisper STT** and structured **Cartesia TTS** with zero idle blocking.
+* **Privacy-First Local Execution**: Orchestrated to leverage Apple Silicon's **MPS (Metal Performance Shaders)** and unified memory architecture, running large LLMs and local embedders completely offline at high token-per-second rates.
+* **Resilient Socket Sessions**: Uses a thread-aware **Redis checkpointer** within LangGraph. If a WebSocket connection drops mid-speech, the session resumes seamlessly upon reconnection without losing agent memory state.
+* **Enterprise-Grade Observability**: Integrates custom middleware that forces distributed trace propagation (`X-Trace-ID`) across asynchronous thread pools, with live **Prometheus instrumentation** (`/metrics`) and deep agent step-tracing via **Langfuse**.
 
 ---
 
@@ -92,25 +95,30 @@ flowchart TD
 ## 🌟 The 5 Pillars of the Architecture
 
 ### 1. Full-Duplex Voice Streaming (Pipecat + WebSockets)
-*   **Asynchronous Full-Duplex WebSockets**: Utilizes ASGI protocol directly under FastAPI to stream audio back and forth concurrently.
-*   **Event-Driven Transport**: Uses Pipecat's `WebsocketServerTransport` for ultra-low latency non-blocking frame transmission.
-*   **VAD & Echo Cancellation**: Locally processes voice activation detection (VAD) via Faster-Whisper to filter silence and avoid redundant model invocation.
+
+* **Asynchronous Full-Duplex WebSockets**: Utilizes ASGI protocol directly under FastAPI to stream audio back and forth concurrently.
+* **Event-Driven Transport**: Uses Pipecat's `WebsocketServerTransport` for ultra-low latency non-blocking frame transmission.
+* **VAD & Echo Cancellation**: Locally processes voice activation detection (VAD) via Faster-Whisper to filter silence and avoid redundant model invocation.
 
 ### 2. Multi-Agent Orchestration (LangGraph + Persistence)
-*   **Stateful Agent Mesh**: Employs LangGraph's dynamic `StateGraph` which coordinates a **RAG Researcher** agent and a **JSON Output Validator** for deterministic voice responses.
-*   **State Persistence**: Implements thread-aware persistence (with LangGraph memory savers and `Redis` cache blueprints) that ensures conversational memory is maintained even when connection drops occur.
+
+* **Stateful Agent Mesh**: Employs LangGraph's dynamic `StateGraph` which coordinates a **RAG Researcher** agent and a **JSON Output Validator** for deterministic voice responses.
+* **State Persistence**: Implements thread-aware persistence (with LangGraph memory savers and `Redis` cache blueprints) that ensures conversational memory is maintained even when connection drops occur.
 
 ### 3. Local Privacy-First Inference (Ollama/M4 Optimized)
-*   **Apple Silicon & Local GPU Acceleration**: Fully integrates local LLM execution using `ChatOllama` over Metal Performance Shaders (MPS) or NVidia CUDA.
-*   **Resilient Request Boundaries**: Integrates custom `tenacity` exponential retry logic around local LLM calls to handle model reloading and GPU sleep cycles gracefully.
+
+* **Apple Silicon & Local GPU Acceleration**: Fully integrates local LLM execution using `ChatOllama` over Metal Performance Shaders (MPS) or NVidia CUDA.
+* **Resilient Request Boundaries**: Integrates custom `tenacity` exponential retry logic around local LLM calls to handle model reloading and GPU sleep cycles gracefully.
 
 ### 4. Hybrid RAG (Dense + Sparse/Splade Vector Search)
-*   **Qdrant Vector Database**: Utilizes an asynchronous client (`AsyncQdrantClient`) executing non-blocking hybrid searches (combining keyword BM25/sparse representations and semantic dense embeddings like `BAAI/bge-small-en-v1.5`).
-*   **Startup Verification**: Verifies collection availability and seeds initial schemas asynchronously during service startup to guarantee zero-downtime boots.
+
+* **Qdrant Vector Database**: Utilizes an asynchronous client (`AsyncQdrantClient`) executing non-blocking hybrid searches (combining keyword BM25/sparse representations and semantic dense embeddings like `BAAI/bge-small-en-v1.5`).
+* **Startup Verification**: Verifies collection availability and seeds initial schemas asynchronously during service startup to guarantee zero-downtime boots.
 
 ### 5. Deep Observability (Langfuse Integration)
-*   **Distributed Trace Tracking**: Injects dynamic transaction contexts (`X-Trace-ID`) propagated through FastAPI WebSockets, Celery workers, and LangGraph executors.
-*   **Telemetry Sync**: Logs model costs, token throughputs, search latencies, and agent transitions directly to **Langfuse** or your local self-hosted telemetry stack.
+
+* **Distributed Trace Tracking**: Injects dynamic transaction contexts (`X-Trace-ID`) propagated through FastAPI WebSockets, Celery workers, and LangGraph executors.
+* **Telemetry Sync**: Logs model costs, token throughputs, search latencies, and agent transitions directly to **Langfuse** or your local self-hosted telemetry stack.
 
 ---
 
@@ -195,14 +203,17 @@ make docker-up
 ```
 
 Verify that the containers are healthy:
+
 ```bash
 docker compose ps
 ```
+
 The stack will spin up:
-*   `real_time_agentic_mesh_rag_based_offline_api` (API Engine on `:8000`)
-*   `real_time_agentic_mesh_rag_based_offline_qdrant` (Qdrant Vector DB on `:6333`)
-*   `real_time_agentic_mesh_rag_based_offline_ollama` (Local Ollama Engine on `:11434`)
-*   `voice_ai_redis` (Session checkpoint database on `:6379`)
+
+* `real_time_agentic_mesh_rag_based_offline_api` (API Engine on `:8000`)
+* `real_time_agentic_mesh_rag_based_offline_qdrant` (Qdrant Vector DB on `:6333`)
+* `real_time_agentic_mesh_rag_based_offline_ollama` (Local Ollama Engine on `:11434`)
+* `voice_ai_redis` (Session checkpoint database on `:6379`)
 
 ### 4. Seed Local Vector Store
 
@@ -217,9 +228,9 @@ make seed
 
 ## 🛡️ Security & Hardening
 
-*   **WebSocket Ingress Verification**: Active API Key validation is executed during the WebSocket upgrade handshake. The endpoint `/ws/voice` expects either an `X-API-Key` HTTP header or an `api_key` query parameter matching `API_KEY_SECRET` in `.env`.
-*   **Docker Container Isolation**: The production Docker image uses a multi-stage compilation to completely isolate build tools (`gcc`, `curl`) from the runtime stage.
-*   **Least-Privilege Execution**: The final Docker run stage drops standard system privileges and executes application code entirely under an unprivileged `appuser` (UID/GID `1000`).
+* **WebSocket Ingress Verification**: Active API Key validation is executed during the WebSocket upgrade handshake. The endpoint `/ws/voice` expects either an `X-API-Key` HTTP header or an `api_key` query parameter matching `API_KEY_SECRET` in `.env`.
+* **Docker Container Isolation**: The production Docker image uses a multi-stage compilation to completely isolate build tools (`gcc`, `curl`) from the runtime stage.
+* **Least-Privilege Execution**: The final Docker run stage drops standard system privileges and executes application code entirely under an unprivileged `appuser` (UID/GID `1000`).
 
 ---
 
@@ -227,6 +238,6 @@ make seed
 
 The platform exports rich, real-time telemetry pipelines to monitor concurrent activity:
 
-*   **Liveness & Health Check**: Exposed at `http://localhost:8000/health` with automated status verification.
-*   **Prometheus Metrics**: Exposed at `http://localhost:8000/metrics`. Standardized for Grafana scraping to log active socket counts, queue latency, and error trends.
-*   **Distributed Tracing (Langfuse)**: If `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_SECRET_KEY` are provided in `.env`, the system automatically captures model tokens, per-step latency, and validation failures inside the LangGraph mesh.
+* **Liveness & Health Check**: Exposed at `http://localhost:8000/health` with automated status verification.
+* **Prometheus Metrics**: Exposed at `http://localhost:8000/metrics`. Standardized for Grafana scraping to log active socket counts, queue latency, and error trends.
+* **Distributed Tracing (Langfuse)**: If `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_SECRET_KEY` are provided in `.env`, the system automatically captures model tokens, per-step latency, and validation failures inside the LangGraph mesh.
