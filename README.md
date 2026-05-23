@@ -36,61 +36,59 @@ The flowchart below demonstrates the full-duplex data flow, showing how raw audi
 
 ```mermaid
 flowchart TD
-    %% Define Styles
-    classDef hardware fill:#eceff1,stroke:#37474f,stroke-width:2px,stroke-dasharray: 5 5;
-    classDef stream fill:#e0f7fa,stroke:#00838f,stroke-width:2px;
-    classDef agentmesh fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
-    classDef storage fill:#efebe9,stroke:#4e342e,stroke-width:2px;
+    %% Dark Mode Optimized Styling
+    classDef hardware fill:#1e1e1e,stroke:#64ffda,stroke-width:2px,color:#ffffff;
+    classDef stream fill:#263238,stroke:#80deea,stroke-width:2px,color:#ffffff;
+    classDef agentmesh fill:#2d1b4e,stroke:#ce93d8,stroke-width:2px,color:#ffffff;
+    classDef storage fill:#3e2723,stroke:#ffab91,stroke-width:2px,color:#ffffff;
+    classDef cluster fill:#121212,stroke:#424242,stroke-width:1px,stroke-dasharray: 5 5,color:#b0bec5;
+
+    UserMic["🎙️ User / Microphone"]:::hardware
     
-    %% Elements
-    UserMic["🎙️ User / Microphone Input"]:::hardware
-    
-    subgraph PipecatPipeline ["🔀 Pipecat Full-Duplex Pipeline"]
-        Transport["WebsocketServerTransport<br>(Event Ingestion)"]:::stream
-        STT["Faster-Whisper STT<br>(Local Audio-to-Text)"]:::stream
-        TTS["Cartesia/Local TTS<br>(Text-to-Speech Engine)"]:::stream
+    subgraph PipecatPipeline ["🔀 Pipecat Full-Duplex Pipeline"]:::cluster
+        Transport["Websocket Transport"]:::stream
+        STT["Faster-Whisper STT"]:::stream
+        TTS["TTS Engine"]:::stream
     end
 
-    subgraph LangGraphMesh ["🕸️ LangGraph Orchestration Mesh"]
-        Supervisor["LangGraph Supervisor Node<br>(State Routing & Coordination)"]:::agentmesh
+    subgraph LangGraphMesh ["🕸️ LangGraph Orchestration Mesh"]:::cluster
+        Supervisor["Supervisor Node"]:::agentmesh
         
-        subgraph SpecializedAgents ["🤖 Autonomous Specialized Agents"]
-            RAG["RAG Researcher Agent<br>(Context Retrieval)"]:::agentmesh
-            Validator["JSON Output Validator<br>(Constraint Checker)"]:::agentmesh
+        subgraph SpecializedAgents ["🤖 Specialized Workers"]:::cluster
+            RAG["RAG Researcher"]:::agentmesh
+            Validator["JSON Validator"]:::agentmesh
         end
     end
 
-    subgraph LLMRunner ["🧠 Local Inference Engine"]
-        Ollama["Ollama Runtime<br>(Llama 3.2 / M-Series MPS)"]:::hardware
+    subgraph LLMRunner ["🧠 Local Inference"]:::cluster
+        Ollama["Ollama Runtime<br>(M-Series MPS)"]:::hardware
     end
     
-    subgraph KnowledgeDB ["💾 Persistence & Cache Layer"]
-        Qdrant[("🔍 Qdrant Vector DB<br>(Hybrid Sparse/Dense Search)")]:::storage
-        Redis[("💾 Redis Session Store<br>(LangGraph Memory State)")]:::storage
+    subgraph KnowledgeDB ["💾 Data & Memory"]:::cluster
+        Qdrant[("🔍 Qdrant Hybrid Vector DB")]:::storage
+        Redis[("💾 Redis Memory State")]:::storage
     end
 
-    TTSOutput["🔊 TTS Audio Output (User Speaker)"]:::hardware
+    TTSOutput["🔊 User Speaker"]:::hardware
 
-    %% Direct Flows
-    UserMic ==>|Raw PCM Audio Stream| Transport
+    %% Flows with light-colored lines for dark mode contrast
+    UserMic ==>|PCM Audio| Transport
     Transport --> STT
-    STT -->|Transcribed Text Event| Supervisor
+    STT -->|Transcribed Text| Supervisor
     
-    %% Supervisor routing & checkpointer
-    Supervisor <-->|Reads/Writes Session State| Redis
-    Supervisor <-->|Orchestrates / Routes State| RAG
-    Supervisor <-->|Passes Output for Verification| Validator
+    Supervisor <-->|Read/Write State| Redis
+    Supervisor <-->|Orchestrate| RAG
+    Supervisor <-->|Verify Output| Validator
     
-    %% Tool execution
     RAG <-->|hybrid_search| Qdrant
+    SpecializedAgents <-->|bind_tools| Ollama
     
-    %% Inference
-    SpecializedAgents <-->|ainvoke / bind_tools| Ollama
-    
-    %% Output pipeline
-    Validator -->|Verified Structured Content| TTS
-    TTS -->|Synthesized Audio Frames| Transport
-    Transport ==>|Full-Duplex Audio Output| TTSOutput
+    Validator -->|Structured Output| TTS
+    TTS --> Transport
+    Transport ==>|Audio Stream| TTSOutput
+
+    %% Adjust Link Colors
+    linkStyle default stroke:#b0bec5,stroke-width:2px;
 ```
 
 ---
