@@ -249,19 +249,19 @@ The platform exports rich, real-time telemetry pipelines to monitor concurrent a
 
 ## 📋 Development Tracking (TODO.md)
 
-Phase 1: Voice & Pipeline (Completed)
+### Phase 1: Voice & Pipeline (Completed)
 
 [x] Pipecat WebSocket transport & STT foundation.
 
 [x] Voice Activity Detection (VAD) configuration.
 
-Phase 2: Orchestration (Completed)
+### Phase 2: Orchestration (Completed)
 
 [x] LangGraph Supervisor node and state machine.
 
 [x] Checkpointer implementation for conversation persistence.
 
-Phase 3: Hybrid RAG Search (In Progress)
+### Phase 3: Hybrid RAG Search (In Progress)
 
 [ ] Implement Sparse vector indexing (SPLADE) for enhanced keyword precision.
 
@@ -271,13 +271,13 @@ Phase 3: Hybrid RAG Search (In Progress)
 
 [ ] Bind hybrid search as an autonomous @tool in the RAG node.
 
-Phase 4: Langfuse Observability (In Progress)
+### Phase 4: Langfuse Observability (In Progress)
 
 [ ] Inject LangfuseCallbackHandler into graph configuration.
 
 [ ] Instrument WebSocket endpoints to capture end-to-end latency metrics.
 
-Phase 5: Production Hardening (Planned)
+### Phase 5: Production Hardening (Planned)
 
 [ ] Implement robust API Key authentication for WebSocket security.
 
