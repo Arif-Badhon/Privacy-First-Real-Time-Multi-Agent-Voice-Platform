@@ -33,7 +33,7 @@ flowchart TD
     %% Define Styles
     classDef hardware fill:#eceff1,stroke:#37474f,stroke-width:2px,stroke-dasharray: 5 5;
     classDef stream fill:#e0f7fa,stroke:#00838f,stroke-width:2px;
-    classDef graph fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
+    classDef agentmesh fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
     classDef storage fill:#efebe9,stroke:#4e342e,stroke-width:2px;
     
     %% Elements
@@ -46,11 +46,11 @@ flowchart TD
     end
 
     subgraph LangGraphMesh ["🕸️ LangGraph Orchestration Mesh"]
-        Supervisor["LangGraph Supervisor Node<br>(State Routing & Coordination)"]:::graph
+        Supervisor["LangGraph Supervisor Node<br>(State Routing & Coordination)"]:::agentmesh
         
         subgraph SpecializedAgents ["🤖 Autonomous Specialized Agents"]
-            RAG["RAG Researcher Agent<br>(Context Retrieval)"]:::graph
-            Validator["JSON Output Validator<br>(Constraint Checker)"]:::graph
+            RAG["RAG Researcher Agent<br>(Context Retrieval)"]:::agentmesh
+            Validator["JSON Output Validator<br>(Constraint Checker)"]:::agentmesh
         end
     end
 
