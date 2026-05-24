@@ -120,3 +120,8 @@ env/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+.DS_Store
+.env   
+.env.local_settings
+
