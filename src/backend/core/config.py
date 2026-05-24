@@ -1,5 +1,11 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 class Settings(BaseSettings):
     """
@@ -24,15 +30,13 @@ class Settings(BaseSettings):
     qdrant_collection: str = "real_time_agentic_mesh_rag_based_offline_docs"
     
     # LLM Settings
-    ollama_base_url: str = "http://localhost:11434"
-    llm_model: str = "llama3.2"
-    llm_temperature: float = 0.0
+    ollama_base_url: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    llm_model: str = os.getenv("LLM_MODEL", "llama3.2")
+    llm_temperature: float = float(os.getenv("LLM_TEMPERATURE", 0.0))
     
     # Redis/Caching (Optional for future scale)
-    redis_url: str = "redis://localhost:6379/0"
+    redis_url: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
     
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
-
     # Security
     api_key_secret: str = Field(..., description="Required API key for WebSocket auth")
     
