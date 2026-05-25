@@ -1,4 +1,3 @@
-from fastapi import WebSocketException, status
 from pipecat.services.cartesia import CartesiaTTSService # Or your preferred TTS
 from pipecat.frames.frames import TextFrame
 from src.backend.core.config import settings
