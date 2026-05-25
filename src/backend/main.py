@@ -1,6 +1,19 @@
 from fastapi import WebSocketException, status
 from pipecat.services.cartesia import CartesiaTTSService # Or your preferred TTS
 from pipecat.frames.frames import TextFrame
+from src.backend.core.config import settings
+from src.backend.core.graph import invoke_agent_async
+
+import logging
+import uuid
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from pipecat.transports.websocket import WebsocketServerTransport
+from pipecat.services.whisper import FasterWhisperSTTService
+from pipecat.pipeline.task import PipelineTask
+from pipecat.pipeline.pipeline import Pipeline
+
+logger = logging.getLogger(__name__)
+app = FastAPI()
 
 # --- Security Dependency ---
 async def verify_ws_api_key(websocket: WebSocket) -> str:
